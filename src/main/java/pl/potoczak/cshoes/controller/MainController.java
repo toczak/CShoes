@@ -1,6 +1,7 @@
 package pl.potoczak.cshoes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.potoczak.cshoes.model.Shoes;
@@ -8,26 +9,20 @@ import pl.potoczak.cshoes.model.parameters.Color;
 import pl.potoczak.cshoes.repository.ColorRepository;
 import pl.potoczak.cshoes.repository.ShoesRepository;
 
+import java.util.Collection;
+
 @RestController
 public class MainController {
 
     private final ShoesRepository shoesRepository;
 
-    private final ColorRepository colorRepository;
-
     @Autowired
-    public MainController(ShoesRepository shoesRepository, ColorRepository colorRepository) {
+    public MainController(ShoesRepository shoesRepository) {
         this.shoesRepository = shoesRepository;
-        this.colorRepository = colorRepository;
     }
 
-    @GetMapping("/index")
-    public String index(){
-        Shoes shoes = new Shoes();
-        Color color = new Color("white");
-        colorRepository.save(color);
-        shoes.setColor(color);
-        shoesRepository.save(shoes);
-        return "No dizeń dobry";
+    @GetMapping(value = "/index")
+    public Collection<Shoes> index(){
+        return shoesRepository.findAll();
     }
 }

@@ -4,4 +4,6 @@ import javax.persistence.Entity;
 
 @Entity
 public class Type extends Parameter {
+    public Type() {
+    }
 }

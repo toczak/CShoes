@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 @Entity
 public class Color extends Parameter{
 
+    public Color() {
+    }
+
     public Color(String name) {
         this.setName(name);
     }

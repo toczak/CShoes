@@ -14,6 +14,9 @@ public class Size {
     @Column(nullable = false)
     int size;
 
+    public Size() {
+    }
+
     public int getSize() {
         return size;
     }

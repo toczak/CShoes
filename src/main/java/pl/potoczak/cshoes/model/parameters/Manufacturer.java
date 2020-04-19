@@ -4,4 +4,6 @@ import javax.persistence.Entity;
 
 @Entity
 public class Manufacturer extends Parameter {
+    public Manufacturer() {
+    }
 }
