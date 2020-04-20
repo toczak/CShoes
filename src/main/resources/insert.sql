@@ -39,8 +39,8 @@ INSERT INTO size(id, size) VALUES (19, 43);
 INSERT INTO size(id, size) VALUES (20, 44);
 INSERT INTO size(id, size) VALUES (21, 45);
 
-INSERT INTO shoes(id, description, name, color_id, group_id, manufacturer_id, size_id, type_id)	VALUES (1, 'Opis Czonwersy BLK1', 'Czonwersy BLK1', 1, 2, 4, 15, 3);
-INSERT INTO shoes(id, description, name, color_id, group_id, manufacturer_id, size_id, type_id) VALUES (2, 'Opis Czonwersy GRN1', 'Czonwersy GRN1', 1, 1, 4, 12, 3);
-INSERT INTO shoes(id, description, name, group_id, size_id, manufacturer_id, type_id, color_id)	VALUES (3, 'Opis LIUTO RK3', 'LIUTO RK3', 2, 20, 2, 2, 1);
-INSERT INTO shoes(id, description, name, group_id, size_id, manufacturer_id, type_id, color_id) VALUES (4, 'Opis Aigrek KRMK3', 'Aigrek KRMK3', 2, 17, 3, 1, 3);
-INSERT INTO shoes(id, description, name, group_id, size_id, manufacturer_id, type_id, color_id) VALUES (5, 'Opis Mondelum M765', 'Mondelum M765', 1, 9, 2, 3, 2);
+INSERT INTO shoes(id, description, name, price, color_id, group_id, manufacturer_id, size_id, type_id)	VALUES (1, 'Opis Czonwersy BLK1', 'Czonwersy BLK1', 259, 1, 2, 4, 15, 3);
+INSERT INTO shoes(id, description, name, price, color_id, group_id, manufacturer_id, size_id, type_id) VALUES (2, 'Opis Czonwersy GRN1', 'Czonwersy GRN1', 139, 1, 1, 4, 12, 3);
+INSERT INTO shoes(id, description, name, price, group_id, size_id, manufacturer_id, type_id, color_id)	VALUES (3, 'Opis LIUTO RK3', 'LIUTO RK3', 189, 2, 20, 2, 2, 1);
+INSERT INTO shoes(id, description, name, price, group_id, size_id, manufacturer_id, type_id, color_id) VALUES (4, 'Opis Aigrek KRMK3', 'Aigrek KRMK3', 299, 2, 17, 3, 1, 3);
+INSERT INTO shoes(id, description, name, price, group_id, size_id, manufacturer_id, type_id, color_id) VALUES (5, 'Opis Mondelum M765', 'Mondelum M765', 329, 1, 9, 2, 3, 2);

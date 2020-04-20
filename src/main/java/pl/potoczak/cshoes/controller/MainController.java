@@ -1,17 +1,16 @@
 package pl.potoczak.cshoes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.potoczak.cshoes.DTO.ShoesListDTO;
 import pl.potoczak.cshoes.model.Shoes;
-import pl.potoczak.cshoes.model.parameters.Color;
-import pl.potoczak.cshoes.repository.ColorRepository;
 import pl.potoczak.cshoes.repository.ShoesRepository;
 
 import java.util.Collection;
 
+@CrossOrigin
 @RestController
+@RequestMapping("/shoes")
 public class MainController {
 
     private final ShoesRepository shoesRepository;
@@ -21,8 +20,13 @@ public class MainController {
         this.shoesRepository = shoesRepository;
     }
 
-    @GetMapping(value = "/index")
-    public Collection<Shoes> index(){
-        return shoesRepository.findAll();
+    @GetMapping(value = "/get/{id}")
+    public Shoes getShoes(@PathVariable Long id) {
+        return shoesRepository.getById(id);
+    }
+
+    @GetMapping(value = "/list")
+    public Collection<ShoesListDTO> getListShoes() {
+        return shoesRepository.findAllByOrderByPriceAsc();
     }
 }

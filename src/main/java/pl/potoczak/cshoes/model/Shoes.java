@@ -3,6 +3,7 @@ package pl.potoczak.cshoes.model;
 import pl.potoczak.cshoes.model.parameters.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 public class Shoes {
@@ -16,6 +17,9 @@ public class Shoes {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    @Column(nullable = false)
+    private BigDecimal price;
 
     @OneToOne
     @JoinColumn(name = "color_id", nullable = false)
@@ -91,5 +95,21 @@ public class Shoes {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }
