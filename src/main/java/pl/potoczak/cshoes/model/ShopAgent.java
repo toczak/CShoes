@@ -12,7 +12,22 @@ public class ShopAgent {
 
     private String name;
 
-    @OneToMany(mappedBy = "shopAgent")
+    @OneToMany(mappedBy = "shopAgent", cascade = CascadeType.ALL)
     List<ShopShoesOffer> shoesOffers;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<ShopShoesOffer> getShoesOffers() {
+        return shoesOffers;
+    }
+
+    public void setShoesOffers(List<ShopShoesOffer> shoesOffers) {
+        this.shoesOffers = shoesOffers;
+    }
 }

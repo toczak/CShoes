@@ -1,18 +1,12 @@
 function searchShoes() {
 
-    var data = {};
-    data["shopsNumber"] = $("#shopNumberSelect").val();
-    // data["manufacturer"] = $("#manufacturerSelect").val();
-    // data["type"] = $("#typeSelect").val();
-    // data["isSale"] = $("#saleCheckbox").prop('checked');
-
     $.ajax({
         type: "POST",
         url: "http://localhost:8080/shoes/search",
         // contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: {
-            shopsNumber: data["shopsNumber"],
+            shopsNumber: $("#shopNumberSelect").val(),
             who: $("#whoSelect").val(),
             who_important: $("#who_importantSelect").val(),
             color: $("#colorSelect").val(),
@@ -24,10 +18,6 @@ function searchShoes() {
             size: $("#sizeSelect").val(),
             priceMin: $("#priceMin").val(),
             priceMax: $("#priceMax").val()
-            // price: data["price"],
-            // manufacturer_id: data["manufacturer"],
-            // type_id: data["type"],
-            // isSale: data["isSale"]
         },
 
         error: function (e) {

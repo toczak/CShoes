@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.potoczak.cshoes.dto.ShoesSearchDto;
 import pl.potoczak.cshoes.model.Shoes;
+import pl.potoczak.cshoes.model.ShopAgent;
 import pl.potoczak.cshoes.repository.ManufacturerRepository;
 import pl.potoczak.cshoes.repository.ShoesRepository;
 import pl.potoczak.cshoes.repository.TypeRepository;
+import pl.potoczak.cshoes.service.ShopAgentService;
 
 import java.util.Collection;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -16,14 +19,12 @@ import java.util.Collection;
 public class MainController {
 
     private ShoesRepository shoesRepository;
-    private ManufacturerRepository manufacturerRepository;
-    private TypeRepository typeRepository;
+    private ShopAgentService shopAgentService;
 
     @Autowired
-    public MainController(ShoesRepository shoesRepository, ManufacturerRepository manufacturerRepository, TypeRepository typeRepository) {
+    public MainController(ShoesRepository shoesRepository, ShopAgentService shopAgentService) {
         this.shoesRepository = shoesRepository;
-        this.manufacturerRepository = manufacturerRepository;
-        this.typeRepository = typeRepository;
+        this.shopAgentService = shopAgentService;
     }
 
     @GetMapping(value = "/get/{id}")
@@ -38,8 +39,11 @@ public class MainController {
 
     @PostMapping("/search")
     public void searchShoes(ShoesSearchDto shoesSearchDto){
-//        shopAgentService.
         System.out.println(shoesSearchDto.toString());
+        List<ShopAgent> shopAgents = shopAgentService.createAndFillShops(shoesSearchDto.getShopsNumber());
+        for(ShopAgent shopAgent : shopAgents){
+            System.out.println(shopAgent.getName() + " "+ shopAgent.getShoesOffers().size());
+        }
     }
 
 }

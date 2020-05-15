@@ -134,3 +134,4 @@ fabric.properties
 
 /gradle/wrapper/gradle-wrapper.jar
 /todo
+\src\main\java\pl\potoczak\cshoes\DataLoader.java

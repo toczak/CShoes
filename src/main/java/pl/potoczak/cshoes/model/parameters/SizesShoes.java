@@ -24,4 +24,23 @@ public class SizesShoes {
         this.sizeMin = sizeMin;
         this.sizeMax = sizeMax;
     }
+
+    public SizesShoes() {
+    }
+
+    public int getSizeMin() {
+        return sizeMin;
+    }
+
+    public void setSizeMin(int sizeMin) {
+        this.sizeMin = sizeMin;
+    }
+
+    public int getSizeMax() {
+        return sizeMax;
+    }
+
+    public void setSizeMax(int sizeMax) {
+        this.sizeMax = sizeMax;
+    }
 }
