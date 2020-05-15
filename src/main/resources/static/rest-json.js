@@ -59,6 +59,7 @@ function sort() {
     data["price"] = $("#priceSelect").val();
     data["manufacturer"] = $("#manufacturerSelect").val();
     data["type"] = $("#typeSelect").val();
+    data["isSale"] = $("#saleCheckbox").prop('checked');
 
     $.ajax({
         type: "POST",
@@ -67,7 +68,8 @@ function sort() {
         data: {
             price: data["price"],
             manufacturer_id: data["manufacturer"],
-            type_id: data["type"]
+            type_id: data["type"],
+            isSale: data["isSale"]
         },
 
         error: function (e) {
@@ -76,6 +78,7 @@ function sort() {
         },
 
         success: function (response) {
+            console.log(response);
             $("div.row").empty();
             $.each(response, function (index, element) {
                 var _name = element.name;

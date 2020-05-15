@@ -8,4 +8,7 @@ import java.util.Optional;
 public interface TypeRepository extends CrudRepository<Type,Long> {
     @Override
     Optional<Type> findById(Long aLong);
+
+    @Override
+    Iterable<Type> findAll();
 }

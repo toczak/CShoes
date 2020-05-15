@@ -1,52 +1,76 @@
 package pl.potoczak.cshoes.model;
 
 import pl.potoczak.cshoes.model.parameters.*;
+import pl.potoczak.cshoes.model.parameters_match.ColorMatch;
+import pl.potoczak.cshoes.model.parameters_match.GenderGroupMatch;
+import pl.potoczak.cshoes.model.parameters_match.ManufacturerMatch;
+import pl.potoczak.cshoes.model.parameters_match.TypeMatch;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 public class Shoes {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)
     private BigDecimal price;
 
-    @OneToOne
-    @JoinColumn(name = "color_id", nullable = false)
-    private Color color;
+    @OneToOne(mappedBy = "shoes", cascade = CascadeType.ALL)
+    private SizesShoes sizesShoes;
+
+    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    private List<ColorMatch> colorMatchList;
+
+    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    private List<GenderGroupMatch> genderGroupMatchList;
+
+    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    private List<ManufacturerMatch> manufacturerMatchList;
+
+    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    private List<TypeMatch> typeMatchList;
+
+    @OneToMany(mappedBy = "shoes")
+    private List<ShopShoesOffer> offerList;
 
     @OneToOne
-    @JoinColumn(name = "group_id", nullable = false)
-    private GenderGroup genderGroup;
+    @JoinColumn(name = "picture_id", nullable = false)
+    private Picture picture;
 
-    @OneToOne
-    @JoinColumn(name = "manufacturer_id", nullable = false)
-    private Manufacturer manufacturer;
-
-    @OneToOne
-    @JoinColumn(name = "size_id", nullable = false)
-    private Size size;
-
-    @OneToOne
-    @JoinColumn(name = "type_id", nullable = false)
-    private Type type;
-
-    public Color getColor() {
-        return color;
+    @Override
+    public int hashCode() {
+        return Math.toIntExact(id);
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Shoes) {
+            Shoes shoes2 = (Shoes) obj;
+            return this.name.equals(shoes2.name) && (this.id.equals(shoes2.id));
+        }
+        return false;
+    }
+
+    public List<ColorMatch> getColorMatchList() {
+        return colorMatchList;
+    }
+
+    public void setColorMatchList(List<ColorMatch> colorMatchList) {
+        this.colorMatchList = colorMatchList;
     }
 
     public String getName() {
@@ -65,38 +89,6 @@ public class Shoes {
         this.description = description;
     }
 
-    public GenderGroup getGenderGroup() {
-        return genderGroup;
-    }
-
-    public void setGenderGroup(GenderGroup genderGroup) {
-        this.genderGroup = genderGroup;
-    }
-
-    public Manufacturer getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(Manufacturer manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public Size getSize() {
-        return size;
-    }
-
-    public void setSize(Size size) {
-        this.size = size;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
     public Long getId() {
         return id;
     }
@@ -111,5 +103,54 @@ public class Shoes {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public SizesShoes getSizesShoes() {
+        return sizesShoes;
+    }
+
+    public void setSizesShoes(SizesShoes sizesShoes) {
+        this.sizesShoes = sizesShoes;
+    }
+
+    public Picture getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Picture picture) {
+        this.picture = picture;
+    }
+
+    public List<GenderGroupMatch> getGenderGroupMatchList() {
+        return genderGroupMatchList;
+    }
+
+    public void setGenderGroupMatchList(List<GenderGroupMatch> genderGroupMatchList) {
+        this.genderGroupMatchList = genderGroupMatchList;
+    }
+
+    public List<ManufacturerMatch> getManufacturerMatchList() {
+        return manufacturerMatchList;
+    }
+
+    public void setManufacturerMatchList(List<ManufacturerMatch> manufacturerMatchList) {
+        this.manufacturerMatchList = manufacturerMatchList;
+    }
+
+    public List<TypeMatch> getTypeMatchList() {
+        return typeMatchList;
+    }
+
+    public void setTypeMatchList(List<TypeMatch> typeMatchList) {
+        this.typeMatchList = typeMatchList;
+    }
+
+    public Shoes() {
+    }
+
+    public Shoes(String name, BigDecimal price, Picture picture) {
+        this.name = name;
+        this.price = price;
+        this.picture = picture;
     }
 }
