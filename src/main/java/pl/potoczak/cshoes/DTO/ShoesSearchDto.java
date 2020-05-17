@@ -1,9 +1,9 @@
 package pl.potoczak.cshoes.dto;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ShoesSearchDto {
-    private int shopsNumber;
     private int who;
     private int who_important;
     private int color;
@@ -13,16 +13,10 @@ public class ShoesSearchDto {
     private int manufacturer;
     private int manufacturer_important;
     private int size;
+    @NotNull
     private BigDecimal priceMin;
+    @NotNull
     private BigDecimal priceMax;
-
-    public int getShopsNumber() {
-        return shopsNumber;
-    }
-
-    public void setShopsNumber(int shopsNumber) {
-        this.shopsNumber = shopsNumber;
-    }
 
     public int getWho() {
         return who;
@@ -115,8 +109,7 @@ public class ShoesSearchDto {
     @Override
     public String toString() {
         return "ShoesSearchDto{" +
-                "shopsNumber=" + shopsNumber +
-                ", who=" + who +
+                "who=" + who +
                 ", who_important=" + who_important +
                 ", color=" + color +
                 ", color_important=" + color_important +

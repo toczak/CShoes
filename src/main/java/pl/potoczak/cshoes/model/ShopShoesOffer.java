@@ -61,4 +61,6 @@ public class ShopShoesOffer {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+
+
 }

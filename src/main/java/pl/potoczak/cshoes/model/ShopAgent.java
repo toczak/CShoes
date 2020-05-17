@@ -1,5 +1,7 @@
 package pl.potoczak.cshoes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,7 +15,8 @@ public class ShopAgent {
     private String name;
 
     @OneToMany(mappedBy = "shopAgent", cascade = CascadeType.ALL)
-    List<ShopShoesOffer> shoesOffers;
+    @JsonIgnore
+    private List<ShopShoesOffer> shoesOffers;
 
     public String getName() {
         return name;

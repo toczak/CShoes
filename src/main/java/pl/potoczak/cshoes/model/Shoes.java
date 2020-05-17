@@ -1,5 +1,6 @@
 package pl.potoczak.cshoes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import pl.potoczak.cshoes.model.parameters.*;
 import pl.potoczak.cshoes.model.parameters_match.ColorMatch;
 import pl.potoczak.cshoes.model.parameters_match.GenderGroupMatch;
@@ -30,18 +31,23 @@ public class Shoes {
     private SizesShoes sizesShoes;
 
     @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ColorMatch> colorMatchList;
 
     @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<GenderGroupMatch> genderGroupMatchList;
 
     @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ManufacturerMatch> manufacturerMatchList;
 
     @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<TypeMatch> typeMatchList;
 
     @OneToMany(mappedBy = "shoes")
+    @JsonIgnore
     private List<ShopShoesOffer> offerList;
 
     @OneToOne

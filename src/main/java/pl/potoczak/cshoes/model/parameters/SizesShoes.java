@@ -1,5 +1,6 @@
 package pl.potoczak.cshoes.model.parameters;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.scheduling.annotation.EnableAsync;
 import pl.potoczak.cshoes.model.Shoes;
 
@@ -14,6 +15,7 @@ public class SizesShoes {
 
     @OneToOne
     @MapsId
+    @JsonIgnore
     private Shoes shoes;
 
     private int sizeMin;
