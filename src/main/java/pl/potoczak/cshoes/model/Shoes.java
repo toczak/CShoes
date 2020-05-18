@@ -1,6 +1,8 @@
 package pl.potoczak.cshoes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import pl.potoczak.cshoes.model.parameters.*;
 import pl.potoczak.cshoes.model.parameters_match.ColorMatch;
 import pl.potoczak.cshoes.model.parameters_match.GenderGroupMatch;
@@ -28,21 +30,26 @@ public class Shoes {
     private BigDecimal price;
 
     @OneToOne(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @JsonIgnore
     private SizesShoes sizesShoes;
 
-    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<ColorMatch> colorMatchList;
 
-    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<GenderGroupMatch> genderGroupMatchList;
 
-    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<ManufacturerMatch> manufacturerMatchList;
 
-    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shoes", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<TypeMatch> typeMatchList;
 

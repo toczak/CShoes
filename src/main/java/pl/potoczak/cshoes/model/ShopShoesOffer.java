@@ -22,6 +22,9 @@ public class ShopShoesOffer {
 
     private int amount;
 
+    @Transient
+    private int significance;
+
     public Shoes getShoes() {
         return shoes;
     }
@@ -62,5 +65,11 @@ public class ShopShoesOffer {
         this.amount = amount;
     }
 
+    public int getSignificance() {
+        return significance;
+    }
 
+    public void setSignificance(int significance) {
+        this.significance = significance;
+    }
 }

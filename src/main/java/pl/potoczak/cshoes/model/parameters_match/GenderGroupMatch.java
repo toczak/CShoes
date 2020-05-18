@@ -47,6 +47,14 @@ public class GenderGroupMatch {
         this.shoes = shoes;
     }
 
+    public GenderGroup getGenderGroup() {
+        return genderGroup;
+    }
+
+    public void setGenderGroup(GenderGroup genderGroup) {
+        this.genderGroup = genderGroup;
+    }
+
     public GenderGroupMatch() {
     }
 

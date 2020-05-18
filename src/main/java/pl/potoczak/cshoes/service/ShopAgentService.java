@@ -8,7 +8,6 @@ import pl.potoczak.cshoes.model.ShopAgent;
 import pl.potoczak.cshoes.model.ShopShoesOffer;
 import pl.potoczak.cshoes.repository.ShoesRepository;
 import pl.potoczak.cshoes.repository.ShopAgentRepository;
-import pl.potoczak.cshoes.repository.ShopShoesOfferRepository;
 
 import java.math.BigDecimal;
 import java.util.*;

@@ -46,6 +46,14 @@ public class ManufacturerMatch {
         this.shoes = shoes;
     }
 
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
     public ManufacturerMatch() {
     }
 

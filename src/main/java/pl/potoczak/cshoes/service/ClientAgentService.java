@@ -40,21 +40,23 @@ public class ClientAgentService {
 
     private void chooseSimilarShoesWithTheBestPrice(List<ClientAgent> clientAgentList) {
         offerList = new ArrayList<>();
-        for(ClientAgent clientAgent : clientAgentList){
-            boolean isExists = false;
-            ShopShoesOffer shopShoesOffer = clientAgent.getShoesOffer();
-            ListIterator<ShopShoesOffer> iterator = offerList.listIterator();
-            while(iterator.hasNext()){
-                ShopShoesOffer shoesOffer = iterator.next();
-                if(shopShoesOffer.getShoes().equals(shoesOffer.getShoes())){
-                    isExists = true;
-                    if (shopShoesOffer.getPrice().compareTo(shoesOffer.getPrice()) < 0) {
-                        iterator.set(shopShoesOffer);
+        for(ClientAgent clientAgent : clientAgentList) {
+            if (clientAgent.getShoesOffer() != null) {
+                boolean isExists = false;
+                ShopShoesOffer shopShoesOffer = clientAgent.getShoesOffer();
+                ListIterator<ShopShoesOffer> iterator = offerList.listIterator();
+                while (iterator.hasNext()) {
+                    ShopShoesOffer shoesOffer = iterator.next();
+                    if (shopShoesOffer.getShoes().equals(shoesOffer.getShoes())) {
+                        isExists = true;
+                        if (shopShoesOffer.getPrice().compareTo(shoesOffer.getPrice()) < 0) {
+                            iterator.set(shopShoesOffer);
+                        }
                     }
                 }
+                if (!isExists)
+                    offerList.add(shopShoesOffer);
             }
-            if(!isExists)
-                offerList.add(shopShoesOffer);
         }
     }
 
