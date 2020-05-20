@@ -43,7 +43,6 @@ public class SearchService {
                 ShopAgent shopAgent = shopAgentList.remove(0);
                 clientAgent.setName("client: " + shopAgent.getName());
                 clientAgent.setShoesOffer(search(shopAgent, shoesSearchDto));
-//                clientAgent.setShoesOffer(search(shopAgent.getShoesOffers()));
             }
         }
         if (shopAgentList.size() > 0)

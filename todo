@@ -1,7 +1,5 @@
-//todo podczas inicjalizacji systemu trzeba wybrać ile agentów sprzedających chce się wybrać do działania systemu
-//todo obsłużyć kilka klientów agentów - wartość z formularza? ale agenci wtedy do listy
+//todo podczas inicjalizacji systemu trzeba wybrać ile agentów kupujacych chce się wybrać do działania systemu
 //todo przechodzenie po pozostalych sklepach jak sie nie dogadają
-//todo zrobić żeby tylko jedna oferta tych samych butów szła do sklepu
 //todo dodać buty do bazy danych
 
 

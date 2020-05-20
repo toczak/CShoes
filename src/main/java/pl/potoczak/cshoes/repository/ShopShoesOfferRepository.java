@@ -16,8 +16,6 @@ public interface ShopShoesOfferRepository extends CrudRepository<ShopShoesOffer,
     @Query(value = "TRUNCATE table shop_shoes_offer", nativeQuery = true)
     void truncateAllData();
 
-//    List<ShopShoesOffer> findAllByShopAgentIdAndSizeAndPriceBetweenAAndShoesColorMatchList_();
-
     @Query(value = "SELECT * FROM shop_shoes_offer WHERE shop_agent_id= :agent_id AND size = :#{#dto.size} and price between :#{#dto.priceMin} AND :#{#dto.priceMax}" +
             " AND shoes_id IN (SELECT shoes_id FROM gender_group_match WHERE group_id = :#{#dto.who})" +
             " AND shoes_id IN (SELECT shoes_id FROM type_match WHERE type_id= :#{#dto.category})" +

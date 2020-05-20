@@ -23,16 +23,14 @@
                     alert("Fail! We don't have this shoes.");
                     return;
                 }
-                    $("#name").append(response['name']);
-                    $("#description").append(response['description']);
-                    $("#color").append(response.color['name']);
-                    $("#genderGroup").append(response.genderGroup['name']);
-                    $("#manufacturer").append(response.manufacturer['name']);
-                    $("#size").append(response.size['size']);
-                    $("#type").append(response.type['name']);
-                    $("#price").append(response['price']);
-
-                // });
+                $("#name").append(response['name']);
+                $("#description").append(response['description']);
+                $("#color").append(response.color['name']);
+                $("#genderGroup").append(response.genderGroup['name']);
+                $("#manufacturer").append(response.manufacturer['name']);
+                $("#size").append(response.size['size']);
+                $("#type").append(response.type['name']);
+                $("#price").append(response['price']);
             }
         });
     </script>
