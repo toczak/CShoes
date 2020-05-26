@@ -6,8 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import pl.potoczak.cshoes.model.Shoes;
-import pl.potoczak.cshoes.repository.ShoesRepository;
+import pl.potoczak.cshoes.model.parameters.Color;
+import pl.potoczak.cshoes.model.parameters.GenderGroup;
+import pl.potoczak.cshoes.model.parameters.Manufacturer;
+import pl.potoczak.cshoes.model.parameters.Type;
+import pl.potoczak.cshoes.repository.*;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -16,37 +21,37 @@ public class ShoesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShoesService.class);
 
     private ShoesRepository shoesRepository;
+    private ColorRepository colorRepository;
+    private ManufacturerRepository manufacturerRepository;
+    private TypeRepository typeRepository;
+    private GenderGroupRepository genderGroupRepository;
 
     @Autowired
-    public ShoesService(ShoesRepository shoesRepository) {
+    public ShoesService(ShoesRepository shoesRepository, ColorRepository colorRepository, ManufacturerRepository manufacturerRepository, TypeRepository typeRepository, GenderGroupRepository genderGroupRepository) {
         this.shoesRepository = shoesRepository;
+        this.colorRepository = colorRepository;
+        this.manufacturerRepository = manufacturerRepository;
+        this.typeRepository = typeRepository;
+        this.genderGroupRepository = genderGroupRepository;
     }
 
-
-    @Async
-    public CompletableFuture<Shoes> getShoes(int id) {
-        LOGGER.info("Getting shoes... Id:" + id);
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        LOGGER.info("AFTER.");
-
-
-        final Shoes shoes = shoesRepository.getById((long) id);
-        return CompletableFuture.completedFuture(shoes);
+    public Color getColorById(Long id) {
+        Optional<Color> optional = colorRepository.findById(id);
+        return optional.orElse(null);
     }
 
-    @Async
-    public void  getAllShoes() {
-        CompletableFuture<Shoes> shoes1 = getShoes(random());
-        CompletableFuture<Shoes> shoes2 = getShoes(random());
-        CompletableFuture<Shoes> shoes3 = getShoes(random());
-        CompletableFuture.allOf(shoes1, shoes2, shoes3).join();
+    public Manufacturer getManufacturerById(Long id) {
+        Optional<Manufacturer> optional = manufacturerRepository.findById(id);
+        return optional.orElse(null);
     }
 
-    public int random() {
-        return (int) ((Math.random() * 5) + 1);
+    public Type getTypeById(Long id) {
+        Optional<Type> optional = typeRepository.findById(id);
+        return optional.orElse(null);
+    }
+
+    public GenderGroup getGenderGroupById(Long id) {
+        Optional<GenderGroup> optional = genderGroupRepository.findById(id);
+        return optional.orElse(null);
     }
 }

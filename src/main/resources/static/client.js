@@ -92,19 +92,42 @@ function setInitValues() {
 }
 
 function choose(id) {
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:8080/shoes/get/" + id,
-        dataType: "json",
+    saveChoose(id);
+    getProduct(id);
+    // $.ajax({
+    //     type: "GET",
+    //     url: "http://localhost:8080/shoes/get/" + id,
+    //     dataType: "json",
+    //
+    //     error: function (e) {
+    //         alert("An error occurred while processing JSON");
+    //         console.log("JSON reading failed: ", e);
+    //     },
+    //
+    //     success: function (response) {
+    //         console.log(response);
+    //
+    //     }
+    // });
+}
 
-        error: function (e) {
-            alert("An error occurred while processing JSON");
-            console.log("JSON reading failed: ", e);
+function getProduct(id) {
+    window.open("product.html?id=" + id, "Product");
+    window.close();
+}
+
+function saveChoose(id){
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/shoes/save-choose",
+        dataType: "text",
+        data: {
+            chosenShoesId: id
         },
 
-        success: function (response) {
-            console.log(response);
-            alert("Wybrałeś buty: " + response.shoes.name + ".\nRozmiar: " + response.size + "\nCena:" + response.price);
-        }
+        error: function (e) {
+            alert("An error while save chosen shoes!");
+            console.log("An error while save chosen shoes!", e);
+        },
     });
 }

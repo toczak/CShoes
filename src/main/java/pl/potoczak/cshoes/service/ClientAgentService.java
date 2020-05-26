@@ -3,9 +3,11 @@ package pl.potoczak.cshoes.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.potoczak.cshoes.dto.ShoesSearchDto;
+import pl.potoczak.cshoes.model.ChosenOffer;
 import pl.potoczak.cshoes.model.ClientAgent;
 import pl.potoczak.cshoes.model.ShopAgent;
 import pl.potoczak.cshoes.model.ShopShoesOffer;
+import pl.potoczak.cshoes.repository.ChosenOfferRepository;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -17,18 +19,24 @@ public class ClientAgentService {
 
     private SearchService searchService;
     private List<ShopShoesOffer> offerList;
+    private ShoesService shoesService;
+    private ChosenOfferRepository chosenOfferRepository;
+    private ShoesSearchDto dto;
 
     @Autowired
-    public ClientAgentService(SearchService searchService) {
+    public ClientAgentService(SearchService searchService, ChosenOfferRepository chosenOfferRepository, ShoesService shoesService) {
         this.searchService = searchService;
+        this.chosenOfferRepository = chosenOfferRepository;
+        this.shoesService = shoesService;
     }
 
     public void initSearch(ShoesSearchDto shoesSearchDto, List<ShopAgent> shopAgentList) throws ExecutionException, InterruptedException {
-        List<ShopAgent> shopAgents = new ArrayList<>(shopAgentList);
+//        List<ShopAgent> shopAgents = new ArrayList<>(shopAgentList);
+        dto = shoesSearchDto;
         List<CompletableFuture<ClientAgent>> clientAgents = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            CompletableFuture<ClientAgent> clientAgent = searchService.searchShoes(shoesSearchDto, shopAgents);
+            CompletableFuture<ClientAgent> clientAgent = searchService.searchShoes(shoesSearchDto, new ArrayList<>(shopAgentList));
             clientAgents.add(clientAgent);
         }
 
@@ -72,5 +80,21 @@ public class ClientAgentService {
 
     public List<ShopShoesOffer> getFoundedOffers() {
         return offerList;
+    }
+
+    public void saveChosenOffer(int chosenShoesId) {
+        for(ShopShoesOffer offer : offerList){
+            if(offer.getShoes().getId()==chosenShoesId){
+                ChosenOffer chosenOffer = new ChosenOffer();
+                chosenOffer.setShoes(offer.getShoes());
+                chosenOffer.setSize(offer.getSize());
+                chosenOffer.setPrice(offer.getPrice());
+                chosenOffer.setColor(shoesService.getColorById((long) dto.getColor()));
+                chosenOffer.setManufacturer(shoesService.getManufacturerById((long) dto.getManufacturer()));
+                chosenOffer.setType(shoesService.getTypeById((long) dto.getCategory()));
+                chosenOffer.setGenderGroup(shoesService.getGenderGroupById((long) dto.getWho()));
+                chosenOfferRepository.save(chosenOffer);
+            }
+        }
     }
 }

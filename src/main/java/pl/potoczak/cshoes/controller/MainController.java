@@ -55,4 +55,9 @@ public class MainController {
 
     }
 
+    @PostMapping("/save-choose")
+    public void saveChosenOffer(@RequestParam("chosenShoesId") int chosenShoesId) {
+        clientAgentService.saveChosenOffer(chosenShoesId);
+    }
+
 }

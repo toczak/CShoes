@@ -32,6 +32,7 @@ public class ShopAgentService {
         for (int i = 0; i < shopNumbers; i++) {
             ShopAgent shopAgent = new ShopAgent();
             shopAgent.setName("Shop" + (i + 1));
+            shopAgent.setBusy(false);
             List<Shoes> shoesCopyList = new ArrayList<>(shoesIterable);
             List<ShopShoesOffer> shoesOffers = fillShopShoesOffers(shopAgent, shoesCopyList);
             shopAgent.setShoesOffers(shoesOffers);

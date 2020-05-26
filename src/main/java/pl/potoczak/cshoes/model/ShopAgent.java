@@ -18,6 +18,9 @@ public class ShopAgent {
     @JsonIgnore
     private List<ShopShoesOffer> shoesOffers;
 
+    @Transient
+    private boolean isBusy;
+
     public Long getId() {
         return id;
     }
@@ -40,5 +43,13 @@ public class ShopAgent {
 
     public void setShoesOffers(List<ShopShoesOffer> shoesOffers) {
         this.shoesOffers = shoesOffers;
+    }
+
+    public boolean isBusy() {
+        return isBusy;
+    }
+
+    public void setBusy(boolean busy) {
+        isBusy = busy;
     }
 }

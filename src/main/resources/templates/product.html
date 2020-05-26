@@ -24,12 +24,6 @@
                     return;
                 }
                 $("#name").append(response['name']);
-                $("#description").append(response['description']);
-                $("#color").append(response.color['name']);
-                $("#genderGroup").append(response.genderGroup['name']);
-                $("#manufacturer").append(response.manufacturer['name']);
-                $("#size").append(response.size['size']);
-                $("#type").append(response.type['name']);
                 $("#price").append(response['price']);
             }
         });
@@ -42,32 +36,8 @@
         <td id="name"></td>
     </tr>
     <tr>
-        <td>Size:</td>
-        <td id="size"></td>
-    </tr>
-    <tr>
         <td>Price:</td>
         <td id="price"></td>
-    </tr>
-    <tr>
-        <td>Color:</td>
-        <td id="color"></td>
-    </tr>
-    <tr>
-        <td>Gender/Age group:</td>
-        <td id="genderGroup"></td>
-    </tr>
-    <tr>
-        <td>Manufacturer:</td>
-        <td id="manufacturer"></td>
-    </tr>
-    <tr>
-        <td>Type:</td>
-        <td id="type"></td>
-    </tr>
-    <tr>
-        <td>Description:</td>
-        <td id="description"></td>
     </tr>
     <tr>
         <td>Picture:</td>
