@@ -52,12 +52,14 @@ public class ShopAgentService {
 
         List<ShopShoesOffer> offersList = new ArrayList<>();
         for (Shoes shoes : shoesSet) {
-            BigDecimal newPrice = getChangedPrice(shoes.getPrice(), random);
+            BigDecimal purchasePrice = getPurchasePrice(shoes.getPrice(), random);
+            BigDecimal sellPrice = getSellPrice(purchasePrice, random);
             for (int i = shoes.getSizesShoes().getSizeMin(); i <= shoes.getSizesShoes().getSizeMax(); i++) {
                 ShopShoesOffer shopShoesOffer = new ShopShoesOffer();
                 shopShoesOffer.setShopAgent(shopAgent);
                 shopShoesOffer.setShoes(shoes);
-                shopShoesOffer.setPrice(newPrice);
+                shopShoesOffer.setPurchasePrice(purchasePrice);
+                shopShoesOffer.setPrice(sellPrice);
                 shopShoesOffer.setSize(i);
                 shopShoesOffer.setAmount(random.nextInt(5) + 1);
                 offersList.add(shopShoesOffer);
@@ -66,7 +68,7 @@ public class ShopAgentService {
         return offersList;
     }
 
-    private BigDecimal getChangedPrice(BigDecimal price, Random random) {
+    private BigDecimal getPurchasePrice(BigDecimal price, Random random) {
         int percentage = random.nextInt(10);
         boolean isMinus = random.nextBoolean();
         BigDecimal newPrice;
@@ -74,6 +76,13 @@ public class ShopAgentService {
             newPrice = price.subtract(price.multiply(new BigDecimal((double) percentage / 100)));
         else
             newPrice = price.add(price.multiply(new BigDecimal((double) percentage / 100)));
+        return newPrice;
+    }
+
+    private BigDecimal getSellPrice(BigDecimal purchasePrice, Random random) {
+        int percentage = random.nextInt(5) + 5;
+        BigDecimal newPrice;
+        newPrice = purchasePrice.add(purchasePrice.multiply(new BigDecimal((double) percentage / 100)));
         return newPrice;
     }
 

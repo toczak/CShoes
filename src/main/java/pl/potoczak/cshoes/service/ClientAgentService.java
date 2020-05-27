@@ -36,7 +36,7 @@ public class ClientAgentService {
         List<CompletableFuture<ClientAgent>> clientAgents = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            CompletableFuture<ClientAgent> clientAgent = searchService.searchShoes(shoesSearchDto, new ArrayList<>(shopAgentList));
+            CompletableFuture<ClientAgent> clientAgent = searchService.searchShoes(i, shoesSearchDto, new ArrayList<>(shopAgentList));
             clientAgents.add(clientAgent);
         }
 

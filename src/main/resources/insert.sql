@@ -41,9 +41,3 @@ INSERT INTO picture(id, name) VALUES (18,'18.jpg');
 INSERT INTO picture(id, name) VALUES (19,'19.jpg');
 INSERT INTO picture(id, name) VALUES (20,'20.jpg');
 INSERT INTO picture(id, name) VALUES (21,'21.jpg');
-
--- INSERT INTO shoes(name, description, price, picture_id, group_id, size, manufacturer_id, type_id, color_id) VALUES ('Czonwersy BLK1', 'Czonwersy BLK1', 259, 1, 1, 35, 4, 4, 1);
--- INSERT INTO shoes(name, description, price, picture_id, group_id, size, manufacturer_id, type_id, color_id) VALUES ('Czonwersy GRN1', 'Czonwersy GRN1', 239, 2, 1, 30, 4, 4, 3);
--- INSERT INTO shoes(description, name, price, picture_id, group_id, size, manufacturer_id, type_id, color_id) VALUES ('Liuto RK3', 'Liuto RK3', 149, 3, 2, 37, 2, 3, 1);
--- INSERT INTO shoes(description, name, price, picture_id, group_id, size, manufacturer_id, type_id, color_id) VALUES ('Aigrek KRM3', 'Aigrek KRM3', 190, 4, 2, 35, 3, 1, 5);
--- INSERT INTO shoes(description, name, price, picture_id, group_id, size, manufacturer_id, type_id, color_id) VALUES ('Mondelum M765', 'Mondelum M765', 210, 5, 1, 29, 2, 3, 3);

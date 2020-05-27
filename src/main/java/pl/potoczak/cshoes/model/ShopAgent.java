@@ -18,6 +18,10 @@ public class ShopAgent {
     @JsonIgnore
     private List<ShopShoesOffer> shoesOffers;
 
+    @OneToMany(mappedBy = "shopAgent", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ShopNegotiation> shopNegotiations;
+
     @Transient
     private boolean isBusy;
 
