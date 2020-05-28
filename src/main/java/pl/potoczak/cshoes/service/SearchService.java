@@ -16,6 +16,7 @@ import pl.potoczak.cshoes.repository.ShopNegotiationRepository;
 import pl.potoczak.cshoes.repository.ShopShoesOfferRepository;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -131,12 +132,12 @@ public class SearchService {
         for (ShopShoesOffer shoesOffer : shoesOffers) {
             if (negotiatePrice(shoesOffer, shopAgent, shoesSearchDto.getPriceMin(), shoesSearchDto.getPriceMax())) {
                 saveInformationAboutNegotiation(shopAgent, shoesOffer, shoesSearchDto, true);
-                LOGGER.info(name + " " + shopAgent.getName() + " " + shoesOffer.getShoes().getName() + " p:" + shoesOffer.getPrice() + " " + shoesOffer.getPurchasePrice() +" a:" + shoesOffer.getAmount() + " p1:" + shoesOffer.getPriceDifference() + " a1:" + shoesOffer.getAmountSold() + " sig:" + shoesOffer.getSignificance());
+                LOGGER.info(name + " " + shopAgent.getName() + " " + shoesOffer.getShoes().getName() + " p:" + shoesOffer.getPrice() + " " + shoesOffer.getPurchasePrice() + " a:" + shoesOffer.getAmount() + " p1:" + shoesOffer.getPriceDifference() + " a1:" + shoesOffer.getAmountSold() + " sig:" + shoesOffer.getSignificance());
 
                 return shoesOffer;
             } else {
                 saveInformationAboutNegotiation(shopAgent, shoesOffer, shoesSearchDto, false);
-                LOGGER.info(name + " " + shopAgent.getName() + " " + shoesOffer.getShoes().getName() + " p:" + shoesOffer.getPrice() + " " + shoesOffer.getPurchasePrice() +" a:" + shoesOffer.getAmount() + " p1:" + shoesOffer.getPriceDifference() + " a1:" + shoesOffer.getAmountSold() + " sig:" + shoesOffer.getSignificance());
+//                LOGGER.info(name + " " + shopAgent.getName() + " " + shoesOffer.getShoes().getName() + " p:" + shoesOffer.getPrice() + " " + shoesOffer.getPurchasePrice() + " a:" + shoesOffer.getAmount() + " p1:" + shoesOffer.getPriceDifference() + " a1:" + shoesOffer.getAmountSold() + " sig:" + shoesOffer.getSignificance());
 
             }
         }
@@ -147,6 +148,8 @@ public class SearchService {
 
     private boolean negotiatePrice(ShopShoesOffer shoesOffer, ShopAgent shopAgent, BigDecimal priceMin, BigDecimal priceMax) {
         BigDecimal negotiatePrice = priceMin;
+        System.out.println("x"+negotiatePrice);
+
         //while negotiatePrice is less than priceMax
         while (negotiatePrice.compareTo(priceMax) == -1) {
             boolean isAgree = askShopAgentAboutPrice(shoesOffer, shopAgent, negotiatePrice);
@@ -154,7 +157,9 @@ public class SearchService {
                 shoesOffer.setPrice(negotiatePrice);
                 return true;
             } else {
-                negotiatePrice = negotiatePrice.add(new BigDecimal(1));
+                negotiatePrice = negotiatePrice.add(new BigDecimal(1.00));
+                System.out.println(negotiatePrice);
+
             }
         }
         return false;
@@ -162,20 +167,36 @@ public class SearchService {
 
     private boolean askShopAgentAboutPrice(ShopShoesOffer shoesOffer, ShopAgent shopAgent, BigDecimal negotiatePrice) {
         //musze uwzglednic tutaj wiedze, czy sie dana oferta sprzedaje czy nie
-        if (shoesOffer.getPurchasePrice().compareTo(negotiatePrice) == 1)
-            return false;
+        BigDecimal expectPrice = getExpectPriceShoesOffer(shoesOffer.getPurchasePrice(), shoesOffer.getPriceDifference(), shoesOffer.getAmountSold(), shopNegotiationRepository.countByShopShoesOffer(shoesOffer));
+        LOGGER.info("TTT: " + shoesOffer.getPurchasePrice() + " " + shoesOffer.getAmountSold() + " " +shoesOffer.getPriceDifference()+ " " + shopNegotiationRepository.countByShopShoesOffer(shoesOffer) + " " + expectPrice);
+        return expectPrice.compareTo(negotiatePrice) != 1;
+    }
+/*
+    private BigDecimal getExpectPriceShoesOffer(BigDecimal purchasePrice, int amountSold, int valueOfSoldShoesByShop) {
+        //zrobić tak, żeby cena zawsze była ustawiona przy negocjacjach, abym nie mmusial jej liczyć przy kazdej negocjacji
+        if(valueOfSoldShoesByShop==0) return purchasePrice;
+
+        double percentage = (((1.0 * amountSold) / valueOfSoldShoesByShop) * 100);
+        if (percentage > 50) {
+            percentage = 10;
+        }
         else
-            return true;
+            percentage = percentage / 5;
+        return purchasePrice.add(purchasePrice.multiply(new BigDecimal(percentage / 100)));
+    }*/
+
+    private BigDecimal getExpectPriceShoesOffer(BigDecimal purchasePrice, BigDecimal priceDifference, int amountSold, int valueOfAllShoesNegotiation) {
+        //zrobić tak, żeby cena zawsze była ustawiona przy negocjacjach, abym nie mmusial jej liczyć przy kazdej negocjacji
+        if(valueOfAllShoesNegotiation==0) return purchasePrice.add(priceDifference);
+        double percentage = (((1.0 * amountSold) / valueOfAllShoesNegotiation) * 100);
+        return purchasePrice.add(priceDifference.multiply(new BigDecimal(percentage / 100)));
     }
 
     private void calculatePriceDifferenceAndAmountSold(List<ShopShoesOffer> shoesOffers) {
         for (ShopShoesOffer shoesOffer : shoesOffers) {
-//            System.out.println(shoesOffer.getPrice());
             BigDecimal priceDifference = shoesOffer.getPrice().subtract(shoesOffer.getPurchasePrice());
             shoesOffer.setPriceDifference(priceDifference);
-            shoesOffer.setAmountSold(shopNegotiationRepository.countByShopShoesOffer(shoesOffer));
-//            System.out.println(shoesOffer.getPrice());
-
+            shoesOffer.setAmountSold(shopNegotiationRepository.countByShopShoesOfferAndIsSoldTrue(shoesOffer));
         }
     }
 
