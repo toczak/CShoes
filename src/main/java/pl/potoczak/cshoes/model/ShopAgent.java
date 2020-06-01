@@ -49,11 +49,11 @@ public class ShopAgent {
         this.shoesOffers = shoesOffers;
     }
 
-    public boolean isBusy() {
+    public synchronized boolean isBusy() {
         return isBusy;
     }
 
-    public void setBusy(boolean busy) {
+    public synchronized void setBusy(boolean busy) {
         isBusy = busy;
     }
 }

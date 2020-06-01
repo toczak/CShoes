@@ -1,5 +1,5 @@
 function searchShoes() {
-
+    $("#response").empty();
     $.ajax({
         type: "POST",
         url: "http://localhost:8080/shoes/search",
@@ -29,7 +29,6 @@ function searchShoes() {
                 alert("Nothing found! Change parameters.");
             }
             else {
-                console.log(response.length);
                 console.log(response);
                 $("#response").empty();
                 $("#response").append(' <table class="table table-striped">\n' +

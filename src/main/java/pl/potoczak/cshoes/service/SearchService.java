@@ -16,8 +16,6 @@ import pl.potoczak.cshoes.repository.ShopNegotiationRepository;
 import pl.potoczak.cshoes.repository.ShopShoesOfferRepository;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,12 +27,15 @@ public class SearchService {
     private ShopShoesOfferRepository offerRepository;
     private ShopNegotiationRepository shopNegotiationRepository;
     private ShoesService shoesService;
+    private ShopAgentService shopAgentService;
+    private ShoesSearchDto shoesSearchDto;
 
     @Autowired
-    public SearchService(ShopShoesOfferRepository offerRepository, ShopNegotiationRepository shopNegotiationRepository, ShoesService shoesService) {
+    public SearchService(ShopShoesOfferRepository offerRepository, ShopNegotiationRepository shopNegotiationRepository, ShoesService shoesService, ShopAgentService shopAgentService) {
         this.offerRepository = offerRepository;
         this.shopNegotiationRepository = shopNegotiationRepository;
         this.shoesService = shoesService;
+        this.shopAgentService = shopAgentService;
     }
 
    /* @Async
@@ -48,7 +49,7 @@ public class SearchService {
             if (!shopAgent.isBusy()) {
                 shopAgent.setBusy(true);
                 clientAgent.setName("client" + i+": ");
-                clientAgent.setShoesOffer(getBestShoesOffer(clientAgent.getName(), shopAgent, shoesSearchDto));
+                clientAgent.setShoesOffer(getShoesOffers(clientAgent.getName(), shopAgent, shoesSearchDto));
                 shopAgent.setBusy(false);
             } else {
                 shopAgentList.add(shopAgent);
@@ -74,7 +75,9 @@ public class SearchService {
             ShopAgent shopAgent = (ShopAgent) i.next();
             if (!shopAgent.isBusy()) {
                 shopAgent.setBusy(true);
-                clientAgent.setShoesOffer(getBestShoesOffer(clientAgent.getName(), shopAgent, shoesSearchDto));
+                this.shoesSearchDto = shoesSearchDto;
+                searchAndChooseBestShoesOffer(clientAgent, shopAgent, shoesSearchDto);
+//                clientAgent.setShoesOffer(searchAndChooseBestShoesOffer(clientAgent, shopAgent, shoesSearchDto));
                 i.remove();
                 shopAgent.setBusy(false);
             }
@@ -87,8 +90,6 @@ public class SearchService {
                 }
 // else
 //                    LOGGER.info(shopAgent.getName() + shopAgent.isBusy() + " = nie moge wziac kolejnego sklepu");
-
-
             } else break;
         }
         if (clientAgent.getShoesOffer() == null) {
@@ -96,6 +97,31 @@ public class SearchService {
         }
 
         return CompletableFuture.completedFuture(clientAgent);
+    }
+
+    private void searchAndChooseBestShoesOffer(ClientAgent clientAgent, ShopAgent shopAgent, ShoesSearchDto shoesSearchDto) {
+        clientAgent.setShoesOffer(shopAgentService.getShoesOffers(clientAgent, shopAgent, getParametersFromDto(shoesSearchDto)));
+    }
+
+    public boolean showProductAndNegotiate(ShopAgent shopAgent, ShopShoesOffer shoesOffer) {
+        setOfferLevelOfSignificance(shoesOffer, shoesSearchDto);
+
+        if (negotiatePrice(shoesOffer, shopAgent, shoesSearchDto.getPriceMin(), shoesSearchDto.getPriceMax())) {
+            informShopAboutNegotiation(shopAgent, shoesOffer, shoesSearchDto, true);
+//                LOGGER.info(name + " " + shopAgent.getName() + " " + shoesOffer.getShoes().getName() + " p:" + shoesOffer.getPrice() + " " + shoesOffer.getPurchasePrice() + " a:" + shoesOffer.getAmount() + " p1:" + shoesOffer.getPriceDifference() + " a1:" + shoesOffer.getAmountSold() + " sig:" + shoesOffer.getSignificance());
+
+            return true;
+        } else {
+            informShopAboutNegotiation(shopAgent, shoesOffer, shoesSearchDto, false);
+//            saveInformationAboutNegotiation(shopAgent, shoesOffer, shoesSearchDto, false);
+            return false;
+//                LOGGER.info(name + " " + shopAgent.getName() + " " + shoesOffer.getShoes().getName() + " p:" + shoesOffer.getPrice() + " " + shoesOffer.getPurchasePrice() + " a:" + shoesOffer.getAmount() + " p1:" + shoesOffer.getPriceDifference() + " a1:" + shoesOffer.getAmountSold() + " sig:" + shoesOffer.getSignificance());
+
+        }
+    }
+
+    private void informShopAboutNegotiation(ShopAgent shopAgent, ShopShoesOffer shoesOffer, ShoesSearchDto shoesSearchDto, boolean isSold) {
+        shopAgentService.saveInformationAboutNegotiation(shopAgent, shoesOffer, getParametersFromDto(shoesSearchDto), isSold);
     }
 
     private SearchParameters getParametersFromDto(ShoesSearchDto shoesSearchDto) {
@@ -114,128 +140,35 @@ public class SearchService {
         return searchParameters;
     }
 
-    private ShopShoesOffer getBestShoesOffer(String name, ShopAgent shopAgent, ShoesSearchDto shoesSearchDto) {
-        System.out.println("----------------------------");
-        System.out.println(shopAgent.getName());
-
-        List<ShopShoesOffer> shoesOffers = searchShoesAtDatabase(shopAgent, shoesSearchDto);
-        if (shoesOffers.size() == 0)
-            return null;
-
-        calculatePriceDifferenceAndAmountSold(shoesOffers);
-        sortOffersWithShopAgentKnowledge(shoesOffers);
-        setOffersLevelOfSignificance(shoesOffers, shoesSearchDto);
-
-        //correct with parameters
-        //now negotiation and return if negotiation positive
-        System.out.println(shopAgent.getName());
-        for (ShopShoesOffer shoesOffer : shoesOffers) {
-            if (negotiatePrice(shoesOffer, shopAgent, shoesSearchDto.getPriceMin(), shoesSearchDto.getPriceMax())) {
-                saveInformationAboutNegotiation(shopAgent, shoesOffer, shoesSearchDto, true);
-                LOGGER.info(name + " " + shopAgent.getName() + " " + shoesOffer.getShoes().getName() + " p:" + shoesOffer.getPrice() + " " + shoesOffer.getPurchasePrice() + " a:" + shoesOffer.getAmount() + " p1:" + shoesOffer.getPriceDifference() + " a1:" + shoesOffer.getAmountSold() + " sig:" + shoesOffer.getSignificance());
-
-                return shoesOffer;
-            } else {
-                saveInformationAboutNegotiation(shopAgent, shoesOffer, shoesSearchDto, false);
-//                LOGGER.info(name + " " + shopAgent.getName() + " " + shoesOffer.getShoes().getName() + " p:" + shoesOffer.getPrice() + " " + shoesOffer.getPurchasePrice() + " a:" + shoesOffer.getAmount() + " p1:" + shoesOffer.getPriceDifference() + " a1:" + shoesOffer.getAmountSold() + " sig:" + shoesOffer.getSignificance());
-
-            }
-        }
-        //return null if negotiation fail
-        System.out.println("----------------------------");
-        return null;
-    }
 
     private boolean negotiatePrice(ShopShoesOffer shoesOffer, ShopAgent shopAgent, BigDecimal priceMin, BigDecimal priceMax) {
         BigDecimal negotiatePrice = priceMin;
-        System.out.println("x"+negotiatePrice);
 
         //while negotiatePrice is less than priceMax
-        while (negotiatePrice.compareTo(priceMax) == -1) {
+        while (negotiatePrice.compareTo(priceMax) <= 0) {
             boolean isAgree = askShopAgentAboutPrice(shoesOffer, shopAgent, negotiatePrice);
             if (isAgree) {
                 shoesOffer.setPrice(negotiatePrice);
                 return true;
             } else {
                 negotiatePrice = negotiatePrice.add(new BigDecimal(1.00));
-                System.out.println(negotiatePrice);
-
             }
         }
         return false;
     }
 
     private boolean askShopAgentAboutPrice(ShopShoesOffer shoesOffer, ShopAgent shopAgent, BigDecimal negotiatePrice) {
-        //musze uwzglednic tutaj wiedze, czy sie dana oferta sprzedaje czy nie
-        BigDecimal expectPrice = getExpectPriceShoesOffer(shoesOffer.getPurchasePrice(), shoesOffer.getPriceDifference(), shoesOffer.getAmountSold(), shopNegotiationRepository.countByShopShoesOffer(shoesOffer));
-        LOGGER.info("TTT: " + shoesOffer.getPurchasePrice() + " " + shoesOffer.getAmountSold() + " " +shoesOffer.getPriceDifference()+ " " + shopNegotiationRepository.countByShopShoesOffer(shoesOffer) + " " + expectPrice);
-        return expectPrice.compareTo(negotiatePrice) != 1;
-    }
-/*
-    private BigDecimal getExpectPriceShoesOffer(BigDecimal purchasePrice, int amountSold, int valueOfSoldShoesByShop) {
-        //zrobić tak, żeby cena zawsze była ustawiona przy negocjacjach, abym nie mmusial jej liczyć przy kazdej negocjacji
-        if(valueOfSoldShoesByShop==0) return purchasePrice;
-
-        double percentage = (((1.0 * amountSold) / valueOfSoldShoesByShop) * 100);
-        if (percentage > 50) {
-            percentage = 10;
-        }
-        else
-            percentage = percentage / 5;
-        return purchasePrice.add(purchasePrice.multiply(new BigDecimal(percentage / 100)));
-    }*/
-
-    private BigDecimal getExpectPriceShoesOffer(BigDecimal purchasePrice, BigDecimal priceDifference, int amountSold, int valueOfAllShoesNegotiation) {
-        //zrobić tak, żeby cena zawsze była ustawiona przy negocjacjach, abym nie mmusial jej liczyć przy kazdej negocjacji
-        if(valueOfAllShoesNegotiation==0) return purchasePrice.add(priceDifference);
-        double percentage = (((1.0 * amountSold) / valueOfAllShoesNegotiation) * 100);
-        return purchasePrice.add(priceDifference.multiply(new BigDecimal(percentage / 100)));
+        return shopAgentService.thinkAboutOfferedPriceFromClientAgent(shoesOffer, shopAgent, negotiatePrice);
     }
 
-    private void calculatePriceDifferenceAndAmountSold(List<ShopShoesOffer> shoesOffers) {
-        for (ShopShoesOffer shoesOffer : shoesOffers) {
-            BigDecimal priceDifference = shoesOffer.getPrice().subtract(shoesOffer.getPurchasePrice());
-            shoesOffer.setPriceDifference(priceDifference);
-            shoesOffer.setAmountSold(shopNegotiationRepository.countByShopShoesOfferAndIsSoldTrue(shoesOffer));
-        }
-    }
-
-    private void sortOffersWithShopAgentKnowledge(List<ShopShoesOffer> shoesOffers) {
-        shoesOffers.sort(Comparator.comparing(ShopShoesOffer::getAmountSold)
-                .thenComparing(ShopShoesOffer::getPriceDifference)
-                .reversed()
-        );
-    }
-
-    private void saveInformationAboutNegotiation(ShopAgent shopAgent, ShopShoesOffer shoesOffer, ShoesSearchDto dto, boolean isSold) {
-        ShopNegotiation shopNegotiation = new ShopNegotiation();
-        shopNegotiation.setShopShoesOffer(shoesOffer);
-        shopNegotiation.setShopAgent(shopAgent);
-        shopNegotiation.setColor(shoesService.getColorById((long) dto.getColor()));
-        shopNegotiation.setManufacturer(shoesService.getManufacturerById((long) dto.getManufacturer()));
-        shopNegotiation.setType(shoesService.getTypeById((long) dto.getCategory()));
-        shopNegotiation.setGenderGroup(shoesService.getGenderGroupById((long) dto.getWho()));
-        shopNegotiation.setSold(isSold);
-        shopNegotiation.setPrice(shoesOffer.getPrice());
-        shopNegotiationRepository.save(shopNegotiation);
-    }
-
-    private List<ShopShoesOffer> searchShoesAtDatabase(ShopAgent shopAgent, ShoesSearchDto shoesSearchDto) {
-        //add taking into account the knowledge of the selling agent
-        return offerRepository.findAllOffersByParameters(shopAgent.getId(), getParametersFromDto(shoesSearchDto));
-    }
-
-    private void setOffersLevelOfSignificance(List<ShopShoesOffer> shoesOffers, ShoesSearchDto shoesSearchDto) {
-        for (ShopShoesOffer shoesOffer : shoesOffers) {
-            Shoes shoes = shoesOffer.getShoes();
-            int significance = 0;
-            significance += getColorSignificance(shoes.getColorMatchList(), shoesSearchDto);
-            significance += getManufacturerSignificance(shoes.getManufacturerMatchList(), shoesSearchDto);
-            significance += getTypeSignificance(shoes.getTypeMatchList(), shoesSearchDto);
-            significance += getGroupSignificance(shoes.getGenderGroupMatchList(), shoesSearchDto);
-            shoesOffer.setSignificance(significance);
-        }
-//        shoesOffers.sort(Comparator.comparingInt(ShopShoesOffer::getSignificance).reversed());
+    private void setOfferLevelOfSignificance(ShopShoesOffer shoesOffer, ShoesSearchDto shoesSearchDto) {
+        Shoes shoes = shoesOffer.getShoes();
+        int significance = 0;
+        significance += getColorSignificance(shoes.getColorMatchList(), shoesSearchDto);
+        significance += getManufacturerSignificance(shoes.getManufacturerMatchList(), shoesSearchDto);
+        significance += getTypeSignificance(shoes.getTypeMatchList(), shoesSearchDto);
+        significance += getGroupSignificance(shoes.getGenderGroupMatchList(), shoesSearchDto);
+        shoesOffer.setSignificance(significance);
     }
 
     private int getGroupSignificance(List<GenderGroupMatch> genderGroupMatchList, ShoesSearchDto shoesSearchDto) {
@@ -269,6 +202,5 @@ public class SearchService {
         }
         return 0;
     }
-
 
 }
