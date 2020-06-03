@@ -30,12 +30,11 @@ public class ClientAgentService {
         this.shoesService = shoesService;
     }
 
-    public void initSearch(ShoesSearchDto shoesSearchDto, List<ShopAgent> shopAgentList) throws ExecutionException, InterruptedException {
-//        List<ShopAgent> shopAgents = new ArrayList<>(shopAgentList);
+    public void initSearch(ShoesSearchDto shoesSearchDto, List<ShopAgent> shopAgentList, int clientsNumber) throws ExecutionException, InterruptedException {
         dto = shoesSearchDto;
         List<CompletableFuture<ClientAgent>> clientAgents = new ArrayList<>();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < clientsNumber; i++) {
             CompletableFuture<ClientAgent> clientAgent = searchService.searchShoes(i, shoesSearchDto, new ArrayList<>(shopAgentList));
             clientAgents.add(clientAgent);
         }

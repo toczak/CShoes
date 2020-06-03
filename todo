@@ -1,7 +1,3 @@
-//todo podczas inicjalizacji systemu trzeba wybrać ile agentów kupujacych chce się wybrać do działania systemu
-
-//todo zaimplementować mechanizm prowadzenia negocjacji
-
 //todo w zakresie agentów „sprzedawców”:
 //todo 1- zaimplementować mechanizm zapisywania informacji o „sprzedanych towarach” z uwzględnieniem podawanych parametrów poszukiwania - musi zapamietac, ze gosciu przyszedl i  przy takich parametrach kupil tamto
 //todo 2?- zaimplementować mechanizm uwzględniania  wiedzy z punktu poprzedniego przy przygotowywaniu oferty dla następnego klienta - jak przyjdzie nastepny i zapyta o to samo to mozna mu wcisnac cos co sie sprzedalo porpzedniemu
@@ -15,10 +11,6 @@
 //todo 6?- zaimplementować mechanizm zapisywania informacji o wybieranych i nie wybieranych przez użytkownika ofertach dla określonych parametrów wyszukiwania i uwzględnianie tej wiedzy w kolejnych wyszukiwaniach
  - jesli kupujacy wybral np zielona pilke to kupujacy wie, ze przy podanych parametrach on chce taka sama rzecz - mam sie rozgladac za zielona pilka. (bez wzgledu jak pasuje, bo czerwona moze pasowac lepiej) - ale ludzie wybierali wczesniej zielona, i to ona ma wieksze dopasowanie niz czerwona. Moze dostawc wieksza wage.
 
-
-//todo drugi agent moze wziac produkt taki sam ale z inna cena.
-
-//todo naprawić bo jest tak, że sie dublują negocjacje w bazie danych...?
 
 //zrobione:
 AGENT SPRZEDAJĄCY:

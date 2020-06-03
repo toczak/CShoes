@@ -24,6 +24,7 @@ public class MainController {
     private ShoesRepository shoesRepository;
     private ShopAgentService shopAgentService;
     private ClientAgentService clientAgentService;
+    private int clientsNumber;
 
     @Autowired
     public MainController(ShoesRepository shoesRepository, ShopAgentService shopAgentService, ClientAgentService clientAgentService) {
@@ -43,14 +44,15 @@ public class MainController {
     }
 
     @PostMapping("/set-init")
-    public ResponseEntity setInit(@RequestParam("shopsNumber") int shopsNumber) {
+    public ResponseEntity setInit(@RequestParam("shopsNumber") int shopsNumber, @RequestParam("clientsNumber") int clientsNumber) {
         shopAgentService.createAndFillShops(shopsNumber);
+        this.clientsNumber = clientsNumber;
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/search")
     public ResponseEntity<?> searchShoes(@Valid ShoesSearchDto shoesSearchDto) throws ExecutionException, InterruptedException {
-        clientAgentService.initSearch(shoesSearchDto, shopAgentService.getShopAgents());
+        clientAgentService.initSearch(shoesSearchDto, shopAgentService.getShopAgents(), clientsNumber);
         return new ResponseEntity<>(clientAgentService.getFoundedOffers(), HttpStatus.OK);
 
     }

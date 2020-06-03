@@ -74,7 +74,9 @@ function setInitValues() {
         url: "http://localhost:8080/shoes/set-init",
         dataType: "text",
         data: {
-            shopsNumber: $("#shopNumberSelect").val()
+            shopsNumber: $("#shopNumberSelect").val(),
+            clientsNumber: $("#clientAgentSelect").val()
+
         },
 
         error: function (e) {
@@ -93,21 +95,6 @@ function setInitValues() {
 function choose(id) {
     saveChoose(id);
     getProduct(id);
-    // $.ajax({
-    //     type: "GET",
-    //     url: "http://localhost:8080/shoes/get/" + id,
-    //     dataType: "json",
-    //
-    //     error: function (e) {
-    //         alert("An error occurred while processing JSON");
-    //         console.log("JSON reading failed: ", e);
-    //     },
-    //
-    //     success: function (response) {
-    //         console.log(response);
-    //
-    //     }
-    // });
 }
 
 function getProduct(id) {
